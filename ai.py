@@ -48,7 +48,6 @@ class MinMaxAi(GameAi):
         if evalResult == AiEvaluationValues.VICTORY_2:
             minScore = self.__min_score + depth
             maxScore = self.__max_score - depth
-            # print('VICTORY X; depth: {0}; move: {1}; score: {2}'.format(depth, move, maxScore if self.__is_max_player(self.config.player2) else minScore, player))
             return maxScore if self.__is_max_player(self.config.player2) else minScore
 
         # Check DRAW
@@ -65,11 +64,6 @@ class MinMaxAi(GameAi):
                     board[idx] = player
                     nextPlayer = self.__get_oponent_player(player)
                     bestScore = max(bestScore, self.minmax(board, depth + 1, nextPlayer, idx))
-
-                    # if depth == 0:
-                    #     print(board)
-                    #     print('player: {3}; depth: {0}; move: {1}; score: {2}'.format(depth, idx, bestScore, player))
-
                     # Undo the move
                     board[idx] = self.config.emptyValue
             return bestScore
@@ -81,10 +75,6 @@ class MinMaxAi(GameAi):
                     board[idx] = player
                     nextPlayer = self.__get_oponent_player(player)
                     bestScore = min(bestScore, self.minmax(board, depth + 1, nextPlayer, idx))
-                    # if depth == 1:
-                    #     print(board)
-                    #     print('player: {3}; depth: {0}; move: {1}; score: {2}'.format(depth, idx, bestScore, player))
-
                     # Undo the move
                     board[idx] = self.config.emptyValue
             return bestScore
@@ -101,14 +91,12 @@ class MinMaxAi(GameAi):
             if tile == self.config.emptyValue:
                 board[idx] = player
                 score = self.minmax(board, 0, self.__get_oponent_player(player), idx)
-                # print('move: {0}; score: {1}'.format(idx, score))
                 # Undo the move
                 board[idx] = self.config.emptyValue
                 # set best score and best move
                 if score > bestScore:
                     bestScore = score
                     bestMove = idx
-        # print('BEST MOVE: {0}'.format(bestMove))
         return bestMove
 
 
