@@ -22,13 +22,19 @@ class GameAi:
     def getPlayerMove(self, player: str, board: List):
         pass
 
+MAX_INIT = -1000
+MIN_INIT = 1000
+MAX_SCORE = 10
+MIN_SCORE = -10
+DRAW_SCORE = 10
+
 class MinMaxAi(GameAi):
     maxPlayer: str
     def __init__(self, config: AiConfig):
         super().__init__(config)
-        self.__max_score = 10
-        self.__min_score = -10
-        self.__draw_score = 0
+        self.__max_score = MAX_SCORE
+        self.__min_score = MIN_SCORE
+        self.__draw_score = DRAW_SCORE
 
     def __is_max_player(self, player: str):
         return self.maxPlayer == player
@@ -36,7 +42,7 @@ class MinMaxAi(GameAi):
     def __get_oponent_player(self, player: str):
         return self.config.player1 if self.config.player2 == player else self.config.player2
     
-    def minmax(self, board: List, depth: int, player: str, move: int):
+    def minmax(self, board: List, depth: int, player: str, alpha: int, beta: int):
         evalResult = self.config.evaluationCallback()
         # Check Player 1 victory
         if evalResult == AiEvaluationValues.VICTORY_1:
@@ -48,7 +54,6 @@ class MinMaxAi(GameAi):
         if evalResult == AiEvaluationValues.VICTORY_2:
             minScore = self.__min_score + depth
             maxScore = self.__max_score - depth
-            # print('VICTORY X; depth: {0}; move: {1}; score: {2}'.format(depth, move, maxScore if self.__is_max_player(self.config.player2) else minScore, player))
             return maxScore if self.__is_max_player(self.config.player2) else minScore
 
         # Check DRAW
@@ -59,56 +64,55 @@ class MinMaxAi(GameAi):
 
         # Process minmax if MAX player turn
         if self.__is_max_player(player):
-            bestScore = -1000
+            bestScore = MAX_INIT
             for idx, tile in enumerate(board):
                 if tile == self.config.emptyValue:
                     board[idx] = player
                     nextPlayer = self.__get_oponent_player(player)
-                    bestScore = max(bestScore, self.minmax(board, depth + 1, nextPlayer, idx))
-
-                    # if depth == 0:
-                    #     print(board)
-                    #     print('player: {3}; depth: {0}; move: {1}; score: {2}'.format(depth, idx, bestScore, player))
-
+                    bestScore = max(bestScore, self.minmax(board, depth + 1, nextPlayer, alpha, beta))
                     # Undo the move
                     board[idx] = self.config.emptyValue
+                    # Prunning
+                    alpha = max(alpha, bestScore)
+                    if beta <= alpha:
+                        break
+
             return bestScore
         else:
             # Process minmax if MIN player turn
-            bestScore = 1000
+            bestScore = MIN_INIT
             for idx, tile in enumerate(board):
                 if tile == self.config.emptyValue:
                     board[idx] = player
                     nextPlayer = self.__get_oponent_player(player)
-                    bestScore = min(bestScore, self.minmax(board, depth + 1, nextPlayer, idx))
-                    # if depth == 1:
-                    #     print(board)
-                    #     print('player: {3}; depth: {0}; move: {1}; score: {2}'.format(depth, idx, bestScore, player))
-
+                    bestScore = min(bestScore, self.minmax(board, depth + 1, nextPlayer, alpha, beta))
                     # Undo the move
                     board[idx] = self.config.emptyValue
+                    #Prunning
+                    beta = min(beta, bestScore)
+                    if beta <= alpha:
+                        break
+
             return bestScore
 
 
     def getPlayerMove(self, player: str, board: List):
         super().getPlayerMove(player, board)
         bestMove = -1
-        bestScore = -1000
+        bestScore = MAX_INIT
         self.maxPlayer = player
 
         for idx, tile in enumerate(board):
             # Check if tile is empty
             if tile == self.config.emptyValue:
                 board[idx] = player
-                score = self.minmax(board, 0, self.__get_oponent_player(player), idx)
-                # print('move: {0}; score: {1}'.format(idx, score))
+                score = self.minmax(board, 0, self.__get_oponent_player(player), MAX_INIT, MIN_INIT)
                 # Undo the move
                 board[idx] = self.config.emptyValue
                 # set best score and best move
                 if score > bestScore:
                     bestScore = score
                     bestMove = idx
-        # print('BEST MOVE: {0}'.format(bestMove))
         return bestMove
 
 
