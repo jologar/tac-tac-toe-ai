@@ -1,6 +1,7 @@
 
 from enum import Enum
 from typing import Callable, List
+import random
 
 class AiEvaluationValues(Enum):
     DRAW = 0
@@ -98,8 +99,8 @@ class MinMaxAi(GameAi):
 
     def getPlayerMove(self, player: str, board: List):
         super().getPlayerMove(player, board)
-        bestMove = -1
         bestScore = MAX_INIT
+        bestMoves = []
         self.maxPlayer = player
 
         for idx, tile in enumerate(board):
@@ -111,9 +112,15 @@ class MinMaxAi(GameAi):
                 board[idx] = self.config.emptyValue
                 # set best score and best move
                 if score > bestScore:
+                    bestMoves = []
                     bestScore = score
-                    bestMove = idx
-        return bestMove
+                    bestMoves.append((idx, score))
+                elif score == bestScore:
+                    bestMoves.append((idx, score))
+        # Randomize best move between the pairs
+        bestMove = bestMoves[random.randint(0, len(bestMoves) - 1)]
+
+        return bestMove[0]
 
 
 

@@ -38,7 +38,7 @@ class TkinterGui(Tk, Ui):
         self.__x_image = PImage.open("gameui/assets/x.jpeg")
         self.__o_image = PImage.open("gameui/assets/o.jpg")
         
-        # self.__game.set_human(Player.PLAYER_1)
+        self.__game.set_human(Player.PLAYER_2)
 
         self.__build_menu()
         
