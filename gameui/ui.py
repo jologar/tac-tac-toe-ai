@@ -18,7 +18,7 @@ class ConsoleUi(Ui):
         self.stop()
 
     def __ui_loop(self):
-        self.__game.set_human(Player.PLAYER_2)
+        self.__game.set_human(Player.PLAYER_1)
         while self.__game.game_state() == GameState.ONGOING:
             player = self.__game.get_player_turn()
             if self.__game.is_human(player):

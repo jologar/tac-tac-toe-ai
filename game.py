@@ -60,11 +60,22 @@ class Game(Observable):
                     return False
         return True
 
+    def reset_game(self):
+        self.__board.reset_board()
+        self.__player_turn = Player.PLAYER_1
+        self.fire()
+
     def set_human(self, player: Player):
         self.__human.add(player)
 
     def is_human(self, player: Player):
         return player in self.__human
+
+    def has_human_player(self):
+        return len(self.__human) > 0
+
+    def is_pvp(self):
+        return len(self.__human) == 2
 
     def switch_turn(self):
         self.__player_turn = Player.PLAYER_2 if self.__player_turn == Player.PLAYER_1 else Player.PLAYER_1

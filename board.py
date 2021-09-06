@@ -9,6 +9,7 @@ class TileValue(Enum):
 class Board:
     def __init__(self):
         self._board: List = []
+        # self._board: List = ['O', 'X', 'O', '-', 'X', '-', '-', '-', '-']
         for n in range(9):
             self._board.append(TileValue.EMPTY.value)
 
@@ -35,4 +36,8 @@ class Board:
         if not self.is_valid_tile(row, col):
             raise ValueError
         idx = self.__transformIndex(row, col)
-        return self._board[idx] == TileValue.EMPTY.value  
+        return self._board[idx] == TileValue.EMPTY.value
+
+    def reset_board(self):
+        for idx in range(len(self._board)):
+            self._board[idx] = TileValue.EMPTY.value

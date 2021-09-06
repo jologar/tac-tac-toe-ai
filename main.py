@@ -2,7 +2,7 @@ from typing import Callable
 from ai import AiConfig, AiEvaluationValues, MinMaxAi
 from game import Game, GameState
 from board import Board, TileValue
-from ui import ConsoleUi
+from gameui import tkinterui as tkui
 
 class AiCallbackWrapper:
     def __init__(self, callback: Callable):
@@ -27,7 +27,8 @@ def main():
     aiConfig = AiConfig(TileValue.O.value, TileValue.X.value, TileValue.EMPTY.value, aiCallbackWrapper.callback)
     ai = MinMaxAi(aiConfig)
 
-    ui = ConsoleUi(game, ai)
+    # ui = ConsoleUi(game, ai)
+    ui = tkui.TkinterGui(game, ai)
     ui.start()
 
 if __name__ == "__main__":
