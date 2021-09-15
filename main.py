@@ -30,6 +30,8 @@ def main():
     # ui = ConsoleUi(game, ai)
     ui = tkui.TkinterGui(game, ai)
     ui.start()
+    #test
+
 
 if __name__ == "__main__":
     main()

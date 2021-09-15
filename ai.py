@@ -2,6 +2,7 @@
 from enum import Enum
 from typing import Callable, List
 import random
+from fastai import fast_ai
 
 class AiEvaluationValues(Enum):
     DRAW = 0
@@ -123,4 +124,17 @@ class MinMaxAi(GameAi):
         return bestMove[0]
 
 
+class FastMinMaxAi(GameAi):
+    def __init__(self, config: AiConfig):
+        super().__init__(config)
+    
+    def getPlayerMove(self, player: str, board: List):
+        config = fast_ai.AiConfig()
+        config.player1 = self.config.player1
+        config.player2 = self.config.player2
+        config.emptyValue = self.config.emptyValue
+        config.callback = self.config.evaluationCallback
 
+        ai = fast_ai.MinMaxAi(config)
+        # return ai.getPlayerMove()
+        return ai.test()
