@@ -1,5 +1,5 @@
 from typing import Callable
-from ai import AiConfig, AiEvaluationValues, MinMaxAi
+from ai import AiConfig, AiEvaluationValues, FastMinMaxAi, MinMaxAi
 from game import Game, GameState
 from board import Board, TileValue
 from gameui import tkinterui as tkui
@@ -25,8 +25,8 @@ def main():
     # AI initialization
     aiCallbackWrapper = AiCallbackWrapper(game.game_state)
     aiConfig = AiConfig(TileValue.O.value, TileValue.X.value, TileValue.EMPTY.value, aiCallbackWrapper.callback)
-    ai = MinMaxAi(aiConfig)
-
+    # ai = MinMaxAi(aiConfig)
+    ai = FastMinMaxAi(aiConfig)
     # ui = ConsoleUi(game, ai)
     ui = tkui.TkinterGui(game, ai)
     ui.start()

@@ -1,3 +1,9 @@
 # Python cache
 __pycache__/
+
+# vscode
 .vscode
+
+# compiled binaries
+**/*.so
+**/*.o

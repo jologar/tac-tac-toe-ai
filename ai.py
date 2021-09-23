@@ -133,8 +133,6 @@ class FastMinMaxAi(GameAi):
         config.player1 = self.config.player1
         config.player2 = self.config.player2
         config.emptyValue = self.config.emptyValue
-        config.callback = self.config.evaluationCallback
 
         ai = fast_ai.MinMaxAi(config)
-        # return ai.getPlayerMove()
-        return ai.test()
+        return ai.getPlayerMove(player, board)
