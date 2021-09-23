@@ -93,7 +93,7 @@ class TkinterGui(Tk, Ui):
     def __ai_move(self):
         print('ai turn')
         player = self.__game.get_player_turn()
-        move = self.__ai.getPlayerMove(player, self.__game.get_game_data())
+        move = self.__ai.getPlayerMove(player.value, self.__game.get_game_data())
         col = move % 3
         row = int((move - col) / 3)
         self.__game.do_move(row, col)
