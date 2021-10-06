@@ -13,16 +13,16 @@ class ConsoleUi(Ui):
     def __init__(self, game: Game, ai: GameAi):
         self.__game = game
         self.__ai = ai
+        self.__game.set_human(Player.PLAYER_1)
 
     def __del__(self):
         self.stop()
 
     def __ui_loop(self):
-        self.__game.set_human(Player.PLAYER_1)
         while self.__game.game_state() == GameState.ONGOING:
             player = self.__game.get_player_turn()
             if self.__game.is_human(player):
-                move = input('Enter your move {} (<row> <col>):\n'.format(player.value))
+                move = input('Enter your move {0} (<row> <col>):\n'.format(player.value))
                 if move == 'q':
                     break
                 moveList = move.split(' ')

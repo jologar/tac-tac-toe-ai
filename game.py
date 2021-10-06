@@ -65,6 +65,9 @@ class Game(Observable):
         self.__player_turn = Player.PLAYER_1
         self.fire()
 
+    def clean_players(self):
+        self.__human = set()
+
     def set_human(self, player: Player):
         self.__human.add(player)
 
