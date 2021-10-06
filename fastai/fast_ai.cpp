@@ -90,7 +90,7 @@ namespace {
 
                 // Check player 1 victory
                 if (evaluation == EvaluationValue::PLAYER_1) {
-                    short score = (maxPlayer == aiconfig.player1) ? MAX_VICTORY - depth : MIN_VICTORY + depth;
+                    return (maxPlayer == aiconfig.player1) ? MAX_VICTORY - depth : MIN_VICTORY + depth;
                 }
                 // Check player 2 victory
                 if (evaluation == EvaluationValue::PLAYER_2) {
