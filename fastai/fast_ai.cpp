@@ -98,11 +98,10 @@ namespace {
                 }
                 // Check draw:
                 if (evaluation == EvaluationValue::DRAW) {
-                    short score = DRAW_SCORE + depth;
-                    if (player == maxPlayer) {
-                        score *= -1;
+                    if (maxPlayer == player) {
+                        depth *= -1;
                     }
-                    return score;
+                    return DRAW_SCORE + depth;
                 }
                 if (maxPlayer == player) {
                     // Process minmax if MAX turn
@@ -176,13 +175,13 @@ namespace {
                 }
                 // Check diagonal victory
                 char tile1 = boost::python::extract<char>(board[0]);
-                char tile2 = boost::python::extract<char>(board[5]);
+                char tile2 = boost::python::extract<char>(board[4]);
                 char tile3 = boost::python::extract<char>(board[8]);
                 if ((tile1 == tile2) && (tile2 == tile3) && (tile1 != emptyTile)) {
                     return tile1 == player1 ? EvaluationValue::PLAYER_1 : EvaluationValue::PLAYER_2;
                 }
                 tile1 = boost::python::extract<char>(board[2]);
-                tile2 = boost::python::extract<char>(board[5]);
+                tile2 = boost::python::extract<char>(board[4]);
                 tile3 = boost::python::extract<char>(board[6]);
                 if ((tile1 == tile2) && (tile2 == tile3) && (tile1 != emptyTile)) {
                     return tile1 == player1 ? EvaluationValue::PLAYER_1 : EvaluationValue::PLAYER_2;
