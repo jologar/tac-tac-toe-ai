@@ -66,9 +66,7 @@ def evaluation():
     # Ask user for number of test cases
     test_cases = input("Number of test cases per AI system:\n")
     now = datetime.now()
-    suffix = now.strftime("%Y%m%d")
-    random.seed()
-    suffix = suffix + "_" + str(random.randrange(1000, 9999))
+    suffix = now.strftime("%Y%m%d%H%M%S")
     for idx in range(int(test_cases)):
         # Build profile results log for Python AI
         profile_ai("python_ai_perf_{0}".format(suffix), game, py_ai)
