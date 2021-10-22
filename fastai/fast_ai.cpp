@@ -47,22 +47,22 @@ namespace {
                         // Do the move
                         board[i] = player;
                         // Check the move score
-                        short score = minmax(player, 0, MAX_INIT, MIN_INIT);
+                        short score = minmax(getOpponentPlayer(player), 0, MAX_INIT, MIN_INIT);
                         // Undo the move
                         board[i] = aiconfig.emptyValue;
-                        // Check if it's a better move
+                        // Save the best move
                         if (score > bestScore) {
                             bestScore = score;
                             memset(bestMoves, 0, sizeof(bestMoves));
                             Move move;
                             move.position = i;
-                            move.score = bestScore;
+                            move.score = score;
                             bestMoves[0] = move;
                             bestMovesCount = 1;
                         } else if (score == bestScore) {
                             Move move;
                             move.position = i;
-                            move.score = bestScore;
+                            move.score = score;
                             bestMoves[bestMovesCount] = move;
                             bestMovesCount++; 
                         }
@@ -73,7 +73,7 @@ namespace {
                 }
                 short moveIdx = rand() % bestMovesCount;
                 Move selectedMove = bestMoves[moveIdx];
-
+                
                 return selectedMove.position;
             };
         private:
@@ -181,7 +181,7 @@ namespace {
                 // Check DRAW
                 bool isDraw = true;
                 for (int i = 0; i < BOARD_LENGTH; i++) {
-                    if (board[i] == emptyTile) {
+                    if (boost::python::extract<char>(board[i]) == emptyTile) {
                         isDraw = false;
                         break;
                     }
