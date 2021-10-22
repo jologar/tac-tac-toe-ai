@@ -144,17 +144,8 @@ namespace {
                 }
             };
 
-            void printBoard() {
-                for (int i = 0; i < BOARD_LENGTH; i++) {
-                    char tile = boost::python::extract<char>(board[i]);
-                    printf("%c ", tile);
-                }
-                printf("\n");
-            }
-
             EvaluationValue evaluateBoard(char player1, char player2, char emptyTile) {
                 // check lines victory
-                // printBoard();
                 for (int i = 0; i < 3; i++) {
                     int idx = i*3;
                     char tile1 = boost::python::extract<char>(board[idx]);

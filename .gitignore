@@ -5,8 +5,8 @@ __pycache__/
 .vscode
 
 # compiled binaries
-**/*.so
-**/*.o
+fastai/*.so
+fastai/*.o
 
 # profile data
 profile/

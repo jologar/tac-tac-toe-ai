@@ -35,11 +35,22 @@ def profile_ai(profile_name: str, game: Game, ai: GameAi):
             col = move % 3
             row = int((move - col) / 3)
             game.do_move(row, col)
+            print_board(game)
         # Store profile values
         file.write(profile_line[:-1] + "\n")
         # Close the file buffer
         file.close()
 
+def print_board(game: Game):
+    line = "| "
+    game_data = game.get_game_data()
+    for idx, value in enumerate(game_data):
+        line = line + str(value) + " "
+        if (idx + 1) % 3 == 0:
+            line = line + "|"
+            print(line)
+            line = "| "
+    print('\n\n')
 
 def evaluation():
     print("Performance evaluation program:\n")

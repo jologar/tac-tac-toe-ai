@@ -127,12 +127,11 @@ class MinMaxAi(GameAi):
 class FastMinMaxAi(GameAi):
     def __init__(self, config: AiConfig):
         super().__init__(config)
+        aiconfig = fast_ai.AiConfig()
+        aiconfig.player1 = self.config.player1
+        aiconfig.player2 = self.config.player2
+        aiconfig.emptyValue = self.config.emptyValue
+        self.ai = fast_ai.MinMaxAi(aiconfig)
     
     def getPlayerMove(self, player: str, board: List):
-        config = fast_ai.AiConfig()
-        config.player1 = self.config.player1
-        config.player2 = self.config.player2
-        config.emptyValue = self.config.emptyValue
-
-        ai = fast_ai.MinMaxAi(config)
-        return ai.getPlayerMove(player, board)
+        return self.ai.getPlayerMove(player, board)
