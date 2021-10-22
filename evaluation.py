@@ -7,9 +7,13 @@ from datetime import datetime
 import random
 import time
 
+YES = "Y"
+NO = "N"
 DELIMITER = ","
 PROFILE_FOLDER = "./profile/"
 EXTENSION = ".csv"
+PYTHON_FILE_BASE_NAME = "python_ai_perf"
+CPP_FILE_BASE_NAME = "cpp_ai_perf"
 
 def profile_ai(profile_name: str, game: Game, ai: GameAi):
     game.clean_players()
@@ -67,12 +71,30 @@ def evaluation():
     test_cases = input("Number of test cases per AI system:\n")
     now = datetime.now()
     suffix = now.strftime("%Y%m%d%H%M%S")
+    python_ev_file_name = "{0}_{1}".format(PYTHON_FILE_BASE_NAME, suffix)
+    cpp_ev_file_name = "{0}_{1}".format(CPP_FILE_BASE_NAME, suffix)
     for idx in range(int(test_cases)):
         # Build profile results log for Python AI
-        profile_ai("python_ai_perf_{0}".format(suffix), game, py_ai)
+        profile_ai(python_ev_file_name, game, py_ai)
         # Build profile results log for C++ AI
-        profile_ai("cpp_ai_perf_{0}".format(suffix), game, cpp_ai)
+        profile_ai(cpp_ev_file_name, game, cpp_ai)
+    print("Performance evaluation finished. Evaluation files created:")
+    print(python_ev_file_name)
+    print(cpp_ev_file_name)
+    graph_option()
 
+
+def graph_option():
+    graph_opt = ""
+    while graph_opt != NO and graph_opt != YES:
+        graph_opt = input("Do you want to see the evaluation results as a graph? [Y]es/[N]o: ")
+        graph_opt = graph_opt.upper()
+    if (graph_opt == YES):
+        generate_evaluation_graph()
+
+
+def generate_evaluation_graph():
+    print("Generating evaluation graph...")
 
 if __name__ == "__main__":
     evaluation()
