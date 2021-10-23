@@ -4,7 +4,6 @@ from main import AiCallbackWrapper
 from game import Game, GameState
 from board import Board, TileValue
 from datetime import datetime
-import random
 import time
 
 YES = "Y"
@@ -15,35 +14,40 @@ EXTENSION = ".csv"
 PYTHON_FILE_BASE_NAME = "python_ai_perf"
 CPP_FILE_BASE_NAME = "cpp_ai_perf"
 
-def profile_ai(profile_name: str, game: Game, ai: GameAi):
+def profile_ai_to_file(profile_name: str, game: Game, ai: GameAi):
     game.clean_players()
     game.reset_game()
     print("Starting profiling of " + profile_name)
     # Open file buffer
     with open(PROFILE_FOLDER + profile_name + EXTENSION, "a") as file:
-        profile_line = ""
-        # Game loop
-        while game.game_state() == GameState.ONGOING:
-            move_num = 1
-            player = game.get_player_turn()
-            # prev timestamp
-            time_start = time.process_time_ns()
-            move = ai.getPlayerMove(player.value, game.get_game_data())
-            # post timestamp
-            time_end = time.process_time_ns()
-            print("Move {0} time: {1}ns".format(move_num, time_end - time_start))
-            move_time = time_end - time_start
-            profile_line = profile_line + str(move_time) + DELIMITER
-            move_num += 1
-            # execute move to continue the game
-            col = move % 3
-            row = int((move - col) / 3)
-            game.do_move(row, col)
-            print_board(game)
-        # Store profile values
-        file.write(profile_line[:-1] + "\n")
+        # Get the profiling info array
+        profile_array = profile_ai(game, ai)
+        # Convert to a string to be stored in the file
+        profile_line = ",".join(map(str, profile_array))
+        file.write(profile_line + "\n")
         # Close the file buffer
         file.close()
+
+def profile_ai(game: Game, ai: GameAi):
+    # Game loop
+    performance = []
+    while game.game_state() == GameState.ONGOING:
+        player = game.get_player_turn()
+        # prev timestamp
+        time_start = time.process_time_ns()
+        move = ai.getPlayerMove(player.value, game.get_game_data())
+        # post timestamp
+        time_end = time.process_time_ns()
+        move_time = time_end - time_start
+        # save movement time
+        performance.append(move_time)
+        # execute move to continue the game
+        col = move % 3
+        row = int((move - col) / 3)
+        game.do_move(row, col)
+    # Return the profile array when the game finishes
+    return performance
+
 
 def print_board(game: Game):
     line = "| "
@@ -59,7 +63,7 @@ def print_board(game: Game):
 def evaluation():
     print("Performance evaluation program:\n")
     print("it outputs a text log with the results of both AI perfomance tests.\n")
-    # Evaluates the performance of the C++ AI library, compared to the Python one.
+    # Evaluates the performance of the C++ AI library compared to the Python one.
     board = Board()
     game = Game(board)
     # Configure both AIs
@@ -75,9 +79,9 @@ def evaluation():
     cpp_ev_file_name = "{0}_{1}".format(CPP_FILE_BASE_NAME, suffix)
     for idx in range(int(test_cases)):
         # Build profile results log for Python AI
-        profile_ai(python_ev_file_name, game, py_ai)
+        profile_ai_to_file(python_ev_file_name, game, py_ai)
         # Build profile results log for C++ AI
-        profile_ai(cpp_ev_file_name, game, cpp_ai)
+        profile_ai_to_file(cpp_ev_file_name, game, cpp_ai)
     print("Performance evaluation finished. Evaluation files created:")
     print(python_ev_file_name)
     print(cpp_ev_file_name)
