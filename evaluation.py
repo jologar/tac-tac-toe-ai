@@ -17,7 +17,6 @@ CPP_FILE_BASE_NAME = "cpp_ai_perf"
 def profile_ai_to_file(profile_name: str, game: Game, ai: GameAi):
     game.clean_players()
     game.reset_game()
-    print("Starting profiling of " + profile_name)
     # Open file buffer
     with open(PROFILE_FOLDER + profile_name + EXTENSION, "a") as file:
         # Get the profiling info array
@@ -60,7 +59,7 @@ def print_board(game: Game):
             line = "| "
     print('\n\n')
 
-def evaluation():
+def console_evaluation():
     print("Performance evaluation program:\n")
     print("it outputs a text log with the results of both AI perfomance tests.\n")
     # Evaluates the performance of the C++ AI library compared to the Python one.
@@ -101,4 +100,4 @@ def generate_evaluation_graph():
     print("Generating evaluation graph...")
 
 if __name__ == "__main__":
-    evaluation()
+    console_evaluation()
