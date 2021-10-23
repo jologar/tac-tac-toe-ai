@@ -1,10 +1,13 @@
 
+from typing import List
 from ai import AiConfig, FastMinMaxAi, GameAi, MinMaxAi
 from main import AiCallbackWrapper
 from game import Game, GameState
 from board import Board, TileValue
 from datetime import datetime
 import time
+import numpy
+import matplotlib.pyplot as plot
 
 YES = "Y"
 NO = "N"
@@ -13,16 +16,21 @@ PROFILE_FOLDER = "./profile/"
 EXTENSION = ".csv"
 PYTHON_FILE_BASE_NAME = "python_ai_perf"
 CPP_FILE_BASE_NAME = "cpp_ai_perf"
+CPP_LABEL = "cpp"
+PYTHON_LABEL = "python"
+
+def open_profile_file(profile_name: str, mode: str):
+    return open(PROFILE_FOLDER + profile_name + EXTENSION, mode)
 
 def profile_ai_to_file(profile_name: str, game: Game, ai: GameAi):
     game.clean_players()
     game.reset_game()
     # Open file buffer
-    with open(PROFILE_FOLDER + profile_name + EXTENSION, "a") as file:
+    with open_profile_file(profile_name, "a") as file:
         # Get the profiling info array
         profile_array = profile_ai(game, ai)
         # Convert to a string to be stored in the file
-        profile_line = ",".join(map(str, profile_array))
+        profile_line = DELIMITER.join(map(str, profile_array))
         file.write(profile_line + "\n")
         # Close the file buffer
         file.close()
@@ -77,6 +85,7 @@ def console_evaluation():
     python_ev_file_name = "{0}_{1}".format(PYTHON_FILE_BASE_NAME, suffix)
     cpp_ev_file_name = "{0}_{1}".format(CPP_FILE_BASE_NAME, suffix)
     for idx in range(int(test_cases)):
+        print("Generating performance profile cases: {}".format(idx + 1))
         # Build profile results log for Python AI
         profile_ai_to_file(python_ev_file_name, game, py_ai)
         # Build profile results log for C++ AI
@@ -84,20 +93,41 @@ def console_evaluation():
     print("Performance evaluation finished. Evaluation files created:")
     print(python_ev_file_name)
     print(cpp_ev_file_name)
-    graph_option()
+    files = {PYTHON_LABEL: python_ev_file_name, CPP_LABEL: cpp_ev_file_name}
+    graph_console_option(files)
 
 
-def graph_option():
+def graph_console_option(files: dict):
     graph_opt = ""
     while graph_opt != NO and graph_opt != YES:
         graph_opt = input("Do you want to see the evaluation results as a graph? [Y]es/[N]o: ")
         graph_opt = graph_opt.upper()
     if (graph_opt == YES):
-        generate_evaluation_graph()
+        generate_evaluation_graph_from_files(files)
 
 
-def generate_evaluation_graph():
+def generate_evaluation_graph_from_files(files: dict):
     print("Generating evaluation graph...")
+    x_range = numpy.arange(1, 10)
+    figure = plot.figure()
+    for key, filename in files.items():
+        cases_num = 0
+        mean_array = numpy.zeros(9, dtype=float)
+        with open_profile_file(filename, "r") as file:
+            for line in file:
+                cases_num += 1
+                y_values = line.rstrip().split(DELIMITER)
+                mean_array += numpy.array(y_values, dtype=float)
+            file.close()
+        # Calculate mean
+        mean_array = numpy.true_divide(mean_array, cases_num)
+        # Plot
+        plot.plot(x_range, mean_array, label=key)
+    plot.xlabel("movement num.")
+    plot.ylabel("time (ns)")
+    plot.title("AI Performance evaluation")
+    plot.legend()
+    plot.show()
 
 if __name__ == "__main__":
     console_evaluation()
