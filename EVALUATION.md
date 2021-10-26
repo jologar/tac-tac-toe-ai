@@ -19,6 +19,8 @@ cpp_ai_perf_<datetime>
 ```
 The content of the file stores the processor time consumed by the AI [`getPlayerMove`](https://github.com/jologar/tac-tac-toe-ai/blob/master/ai.py#L24) method. The processor time has been chosen over simple time in order to avoid deviations produced by other other processes getting round time in the processor in between. That way, the evaluation can be more accurate.
 
+Each line of the file represents a study case, and each column is a game movement from the 1st in the left to the 9th in the right.
+
 ## Results
 
 (WIP)
