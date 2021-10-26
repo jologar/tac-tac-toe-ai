@@ -10,3 +10,7 @@ fastai/*.o
 
 # profile data
 profile/
+
+# build files
+build/
+dist/
