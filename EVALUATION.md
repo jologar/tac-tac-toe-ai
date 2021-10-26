@@ -23,6 +23,6 @@ The content of the file stores the processor time consumed by the AI [`getPlayer
 
 (WIP)
 
-Graphical representation of the results of the evaluation:
+Graphical representation of the results of the evaluation with a number of study cases of 50 iterations:
 
 ![Evaluation Graph](./assets/evaluation-ttt.png)
