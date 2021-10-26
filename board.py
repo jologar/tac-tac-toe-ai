@@ -9,7 +9,6 @@ class TileValue(Enum):
 class Board:
     def __init__(self):
         self._board: List = []
-        # self._board: List = ['O', 'X', 'O', '-', 'X', '-', '-', '-', '-']
         for n in range(9):
             self._board.append(TileValue.EMPTY.value)
 

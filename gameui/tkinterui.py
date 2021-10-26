@@ -68,7 +68,6 @@ class TkinterGui(Tk, Ui):
             self.ai_thread = threading.Thread(target=self.__ai_move, daemon=True)
             self.__unbind_click()
             self.ai_thread.start()
-            # self.ai_thread.join()
             self.__bind_click()
         else:
             self.__unbind_click()

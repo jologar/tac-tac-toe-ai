@@ -25,12 +25,9 @@ def main():
     # AI initialization
     aiCallbackWrapper = AiCallbackWrapper(game.game_state)
     aiConfig = AiConfig(TileValue.O.value, TileValue.X.value, TileValue.EMPTY.value, aiCallbackWrapper.callback)
-    # ai = MinMaxAi(aiConfig)
     ai = FastMinMaxAi(aiConfig)
-    # ui = ConsoleUi(game, ai)
     ui = tkui.TkinterGui(game, ai)
     ui.start()
-    #test
 
 
 if __name__ == "__main__":
