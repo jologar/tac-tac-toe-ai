@@ -50,3 +50,7 @@ make clean && make
 python3 main.py
 ```
 4. Try to beat the AI. Luck!
+
+## Evaluation
+
+The results of the algorithm performance evaluation can be seen [here](https://github.com/jologar/tac-tac-toe-ai/blob/master/EVALUATION.md).
