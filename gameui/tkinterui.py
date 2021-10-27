@@ -51,10 +51,32 @@ class TkinterGui(Tk, Ui):
     def __build_menu(self):
         menubar = Menu(self)
         menu_game = Menu(menubar)
+
+        menu_game_options = Menu(menu_game)
+        menu_game_options.add_command(label="Player vs AI", command=self.__player_vs_ai)
+        menu_game_options.add_command(label="AI vs Player", command=self.__ai_vs_player)
+        menu_game_options.add_command(label="Player vs Player", command=self.__player_vs_player)
+        menu_game.add_cascade(label="New Game", menu=menu_game_options)
+
         menubar.add_cascade(menu=menu_game, label='Game')
-        menu_game.add_command(label="New Game", command=self.__start_game)
-        # TODO: build the menu
+        
         self.config(menu=menubar)
+
+    def __player_vs_ai(self):
+        self.__game.clean_players()
+        self.__game.set_human(Player.PLAYER_1)
+        self.__start_game()
+
+    def __ai_vs_player(self):
+        self.__game.clean_players()
+        self.__game.set_human(Player.PLAYER_2)
+        self.__start_game()
+
+    def __player_vs_player(self):
+        self.__game.clean_players()
+        self.__game.set_human(Player.PLAYER_1)
+        self.__game.set_human(Player.PLAYER_2)
+        self.__start_game()
 
     def __on_game_state_change(self):
         self.__build_board(self.__canvas.winfo_width(), self.__canvas.winfo_height())
@@ -84,19 +106,16 @@ class TkinterGui(Tk, Ui):
         
 
     def __start_game(self):
-        print('start')
         # subscribe to game events
         self.__game.subscribe(self.__on_game_state_change)
         self.__game.reset_game()
 
     def __ai_move(self):
-        print('ai turn')
         player = self.__game.get_player_turn()
         move = self.__ai.getPlayerMove(player.value, self.__game.get_game_data())
         col = move % 3
         row = int((move - col) / 3)
         self.__game.do_move(row, col)
-        print('move done')
 
     def __on_click(self, event):
         player = self.__game.get_player_turn()
