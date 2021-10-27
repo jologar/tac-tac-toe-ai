@@ -1,6 +1,7 @@
 from gameui.ui import Ui
 from tkinter import *
 from tkinter import ttk
+from tkinter.messagebox import showinfo
 from ai import GameAi
 from game import Game, GameState, Player
 from PIL import ImageTk, Image as PImage
@@ -38,8 +39,6 @@ class TkinterGui(Tk, Ui):
         self.__x_image = PImage.open("gameui/assets/x.jpeg")
         self.__o_image = PImage.open("gameui/assets/o.jpg")
         
-        self.__game.set_human(Player.PLAYER_2)
-
         self.__build_menu()
         
     def __bind_click(self):
@@ -59,7 +58,7 @@ class TkinterGui(Tk, Ui):
         menu_game.add_cascade(label="New Game", menu=menu_game_options)
 
         menubar.add_cascade(menu=menu_game, label='Game')
-        
+
         self.config(menu=menubar)
 
     def __player_vs_ai(self):
@@ -96,13 +95,17 @@ class TkinterGui(Tk, Ui):
             self.__bind_click()
 
     def __endgame_actions(self, game_state: GameState):
-        if game_state == GameState.DRAW:
-            print('DRAW')
-        if game_state == GameState.VICTORY_O:
-            print('O WINS')
-        if game_state == GameState.VICTORY_X:
-            print('X WINS')
+        # Stop the game
         self.stop()
+        # Show end game status to the user
+        message = ""
+        if game_state == GameState.DRAW:
+            message = "It's a DRAW!"
+        if game_state == GameState.VICTORY_O:
+            message = "Player O WINS!"
+        if game_state == GameState.VICTORY_X:
+            message = "Player X WINS!"
+        showinfo("Game Over", message)
         
 
     def __start_game(self):
@@ -186,6 +189,7 @@ class TkinterGui(Tk, Ui):
         self.mainloop()
     
     def stop(self):
+        self.__unbind_click()
         self.__game.unsuscribe(self.__on_game_state_change)
         
     def update():
