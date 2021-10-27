@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 from ai import GameAi
-from game import Game, GameState, Player
+from game import Game, GameState, NotEmptyTile, Player
 from PIL import ImageTk, Image as PImage
 import math
 import threading
@@ -124,7 +124,10 @@ class TkinterGui(Tk, Ui):
         player = self.__game.get_player_turn()
         if self.__game.is_human(player):
             move = self.__get_click_tile(event.x, event.y)
-            self.__game.do_move(move[0], move[1])
+            try:
+                self.__game.do_move(move[0], move[1])
+            except NotEmptyTile:
+                pass
 
     def __get_click_tile(self ,click_x: int, click_y: int):
         # Get x tile dimension
